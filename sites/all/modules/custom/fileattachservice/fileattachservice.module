@@ -1,0 +1,296 @@
+<?php
+/**
+ * Implements hook_permission().
+ */
+function fileattachservice_permission() {
+  return array(
+    'attach file to node' =>  array(
+      'title' => t('attach file to node'),
+      'description' => t('attach file to node - with services '),
+    ),
+  );
+}
+ 
+/*
+ 
+so you just made an image with a post to your endpoint /file
+ 
+with
+{
+    "filename": "test.png",
+    "target_uri": "public://test.png",
+    "filemime": "image/png",
+    "file": "bac64encodestring"
+ 
+}
+ 
+and it gave you the fid in return COOL 
+ 
+ 
+help form http://pingv.com/blog/an-introduction-drupal-7-restful-services
+ 
+LETS ATTACH THAT TO A KNOWN NODE
+ 
+use GET to http://yoursite.com/yourendpoint/fileattach/retrieve?nid=[NID]&fid=[FID]
+ 
+ 
+MAKE THE IMAGE YOUR PROFILE PICTURE
+or to update a user profile just go with
+use GET to http://yoursite.com/yourendpoint/fileattach/retrieve?fid=[FID]&field=profile
+- or GET
+http://localhost/dnet/testend/fileattach/retrieve?fid=1&field=profile
+ 
+*/
+/**
+ * Implements of hook_services_resources().
+ */
+function fileattachservice_services_resources() {
+  $api = array(
+    'fileattach' => array(
+      'operations' => array(
+        'retrieve' => array(
+          'help' => 'Using GET to attach file to node - see this module help permissionm required',
+          'callback' => '_fileattachservice_node_retrieve',
+          'access callback' => 'user_access',
+          'access arguments' => array('attach file to node'),
+          'access arguments append' => FALSE,
+          'args' => array(
+            array(
+              'name' => 'fn',
+              'type' => 'string',
+              'description' => 'Function to perform',
+              'source' => array('path' => '0'),
+              'optional' => TRUE,
+              'default' => '0',
+            ),
+            array(
+              'name' => 'nid',
+              'type' => 'int',
+              'description' => 'Node Id',
+              'source' => array('param' => 'nid'),
+              'optional' => TRUE,
+              'default' => '0',
+            ),
+            array(
+              'name' => 'fid',
+              'type' => 'int',
+              'description' => 'File id fid',
+              'source' => array('param' => 'fid'),
+              'optional' => TRUE,
+              'default' => '0',
+            ),
+            array(
+              'name' => 'field',
+              'type' => 'string',
+              'description' => 'check if profile is true later on the custom mname of a field but does not work yet ',
+              'source' => array('param' => 'field'),
+              'optional' => TRUE,
+              'default' => '0',
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
+ 
+  return $api;
+}
+ 
+ 
+ 
+/**
+ * Callback function for the  retrieve
+ */
+function _fileattachservice_node_retrieve($fn, $nid, $fid, $field) {
+    $array=array();
+          
+  // Check for mad values
+  $nid = intval($nid);
+  $fid = intval($fid);
+ 
+ 
+ 
+  if(!isset($field)){
+    //defaults to field_image
+    $field ="field_image";
+  }
+ 
+  if(isset($nid)&& !$nid==0){
+    $array['nid']="$nid";
+    $nodeset = true;
+  }else{
+    $nodeset = false;
+  }
+ 
+  if(isset($fid) && !$fid==0){
+    $array['fid']="$fid";
+    $fileset = true;
+  }else{
+    $fileset=false;
+  }
+ 
+ 
+ if(isset($field)){
+    $array['field']=$field;
+ }
+ 
+// now we do some fun stuff
+ //user
+ global $user;
+ $uid = $user->uid;
+  if($uid ==0){
+    return array('error'=>'Seemes you are not logged in check your client has the X-CSRF-Token header set after posting details to endpoint/user/login and you have token in services turned on');
+ 
+ }
+ 
+ 
+// update user profile image
+if($nodeset ==false && $fileset==true && $field=='profile'){
+    $array['action']="Set User Profile image";
+ 
+    //check if image belongs to them status = 1 ?
+ 
+    $sql = "SELECT * FROM file_managed  WHERE fid = :fid AND uid =:uid LIMIT 1";
+    $result = db_query($sql, array(':fid'=>$fid, ':uid'=>$uid));
+    $num = $result->rowCount();
+ 
+    if($num ==1){
+//now change the users profile pic !
+ 
+        db_update('users')
+    ->fields(array(
+            'picture' => $fid,
+            )
+    )
+    ->condition('uid', $uid)
+    ->execute();
+ 
+$array['result']="true";
+ 
+    }else{
+    $array['result']="false";
+    $array['error']="that file does not belong to you or does not exist";
+    }
+ 
+    $array['uid']=$uid;
+    $responce = $array;
+}
+ 
+//we can probably guess what we are going to do
+if($nodeset ==true && $fileset==true){
+    $array['action']="Node image set";
+     
+    if($field=='profile'){
+        $array['result']="false";
+        $array['error']="You cant have a node id when using profile as a field var";
+    }else{
+//check if file belongs to them first
+    $sql1 = "SELECT * FROM file_managed  WHERE fid = :fid AND uid =:uid LIMIT 1";
+    $result1 = db_query($sql1, array(':fid'=>$fid, ':uid'=>$uid));
+    $num1 = $result1->rowCount();
+ 
+    if($num1==1){
+        //yep it does
+ 
+    //load that node baby
+    $node = node_load($nid);
+ 
+    if($node->uid == $uid){
+        //yes the node belongs to the user
+ 
+    //$file = file_load($fid);
+        $count = count($node->field_image['und']);
+        if(!$count==0){
+            $fids_array = array();
+ 
+            foreach($node->field_image['und'] as $value){
+                $fids_array[]=$value['fid'];
+ 
+            }
+            $fids_array;
+            if (in_array($fid, $fids_array)) {
+ 
+                $array['result']="false";
+    $array['error']="that image allready exists on this node";
+ 
+            }else{
+ 
+                //yep save
+ 
+$node->field_image[LANGUAGE_NONE][] = array(
+  'fid' => $fid,
+  'display' => 1,
+  'description' => '',
+    );
+     
+    node_save($node);
+        $array['result']="true";
+ 
+ 
+ 
+            }//not in array
+ 
+        }else{
+ 
+ 
+//HOW IN THE HELL DO YOU MAKE THE FIELD_IMAGE Dynamic ?
+ 
+    $node->field_image[LANGUAGE_NONE][] = array(
+  'fid' => $fid,
+  'display' => 1,
+  'description' => '',
+    );
+     
+    node_save($node);
+    $array['result']="true";
+ 
+        }
+         
+ 
+    }else{
+        $array['result']="false";
+    $array['error']="that content  does not belong to you or does not exist ";
+ 
+    }  
+ 
+    }else{
+ 
+    $array['result']="false";
+    $array['error']="that file does not belong to you or does not exist ";
+    }
+ 
+    }
+ 
+    $array['uid']=$uid;
+    $responce = $array;
+}
+ 
+  return $responce;
+}
+ 
+ 
+
+A
+A
+A
+A
+A
+A
+A
+A
+A
+A
+A
+A
+A
+A
+A
+A
+A
+A
+A
+A
+A
+A
+A
+?>
