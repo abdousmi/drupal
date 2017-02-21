@@ -1,0 +1,47 @@
+<?php
+
+function services_superblock() {
+  $query = new EntityFieldQuery();
+  $result = $query
+    ->entityCondition('produit', 'node')
+    ->fieldCondition('designation', 'tid', array('12','13'), 'IN')
+    ->propertyCondition('status', NODE_PUBLISHED)
+    ->addTag('random')
+    ->range(0,5)
+    ->execute();
+}
+
+function services_query_random_alter($query){
+  $query->orderRandom();
+} 
+
+function connect_country_fetch_countries() {
+  $query = new EntityFieldQuery();
+  $query->entityCondition('produit', 'taxonomy_term')
+    ->entityCondition('bundle', array('tags'))
+    ->propertyOrderBy('weight');
+  $result = $query->execute();
+  $tids = array_keys($result['taxonomy_term']);
+
+  return $tids;
+}
+
+dmp(entity_get_info());
+dmp(field_get_info());
+
+function services_query_alter($query) {
+  if ($query->hasTag('efq_debug') && module_exists('devel')) {
+    dpm((string) $query);
+    dpm($query->arguments());
+  }
+}
+
+public function services() {
+$this
+->entityCondition(‘produit’, ‘node’)
+->propertyCondition(‘status’, 1)
+->propertyOrderBy(‘created’, ‘DESC’);
+
+//archive a node for display
+$this->archive();
+} 
