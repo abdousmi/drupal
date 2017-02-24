@@ -1,0 +1,22 @@
+.infos {
+    float: right;
+    font-style: normal;
+    margin: 0 0 1em 1em;
+    border: 1px solid black;
+    padding: 1em;
+    color: white;
+    background-color: #E14949;
+}
+ul.ingredients {
+
+    font-style: normal;
+    margin-left: 2em;
+}
+ol.etapes li{
+
+    list-style: decimal outside none;
+}
+.image {
+    float: right;
+    margin: 0 0 1em 1em;
+}
