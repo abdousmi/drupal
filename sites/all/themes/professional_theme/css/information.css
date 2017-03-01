@@ -5,15 +5,14 @@
     border: 1px solid black;
     padding: 1em;
     color: white;
-    background-color: #E14949;
+    background-color: #03224C;
 }
 ul.ingredients {
 
     font-style: normal;
     margin-left: 2em;
 }
-ol.etapes li{
-
+ol.date li{
     list-style: decimal outside none;
 }
 .image {

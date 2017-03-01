@@ -82,11 +82,14 @@
   <p class="byline">Posté par <?php print $name ?></p>
   <div class="entry">
     <div class="infos">
-      <div class="temps">
-        <?php print "Flash info :".$title ?>
+      <div class="visite">
+            <?php print "Nombre des visites:".$nbr_visite ?>
       </div>
-      <div class="prix">
-        <?php print "Date mise à jour :" .date('d-m-Y') ?>
+      <div class="appreciation">
+            <?php print "Les appreciations :".$appreciation ?>
+      </div>
+      <div class="date">
+            <?php print "Date mise à jour :" .date('d-m-Y') ?>
       </div>
     </div>
   </div>

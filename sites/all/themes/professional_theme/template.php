@@ -107,6 +107,10 @@ function professional_theme_preprocess_node(&$variables) {
   if ($variables['view_mode'] == 'full' && node_is_page($variables['node'])) {
     $variables['classes_array'][] = 'node-full';
   }
+  if($variables['type'] == "information"){
+    $variables['nbr_visite'] = count($variables['field_email']);
+    $variables['appreciation'] = count($variables['field_appreciation']);
+  }
 }
 
 
