@@ -111,6 +111,13 @@ function professional_theme_preprocess_node(&$variables) {
     $variables['nbr_visite'] = count($variables['field_email']);
     $variables['appreciation'] = count($variables['field_appreciation']);
   }
+
+  if($variables['type'] == "recette"){
+    $variables['tdp'] = count($variables['field_field_temps_preparation']);
+    $variables['img'] = count($variables['field_image']);
+  }
+
 }
+
 
 

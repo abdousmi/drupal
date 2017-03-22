@@ -270,9 +270,11 @@
         <?php echo check_plain(theme_get_setting('copyright_override'));?>
     	<?php endif; ?>
 	    <?php endif; ?>
+
     <!--Remove Theme Credit by Setting -->
     <?php if (!theme_get_setting('display_theme_credit')): ?>
-      <p class="credits"> <?php print t('Ville de sima'); ?>  <a href=""></a></p>
+
+      <p class="credits"> <a href="contact">contact</a> | <?php print t('Ville de sima'); ?>  </p>
     <?php endif; ?>
     <div class="clear"></div>
     </div>

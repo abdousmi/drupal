@@ -19,3 +19,9 @@ ol.date li{
     float: right;
     margin: 0 0 1em 1em;
 }
+
+ol.etapes li{
+
+list-style: decimal outside none;
+}
+

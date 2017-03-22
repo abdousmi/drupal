@@ -86,10 +86,14 @@
             <?php print "Nombre des visites:".$nbr_visite ?>
       </div>
       <div class="appreciation">
-            <?php print "Les appreciations :".$appreciation ?>
+            <?php print "Les appreciations sont de:".$appreciation ?>
       </div>
+      <div class="image">
+            <?php print render($content['field_image'])?>
+      </div>
+
       <div class="date">
-            <?php print "Date mise à jour :" .date('d-m-Y') ?>
+            <?php print "Date MAJ:".date('d-m-Y') ?>
       </div>
     </div>
   </div>

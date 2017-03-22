@@ -104,14 +104,6 @@ h2 {
   font-size:24px;
 }
 
-h2,
-h2 a {
-    color: #222;
-    font-size: 1.5em;
-    text-decoration: none;
-    font-variant: small-caps;
-}
-
 h3 {
   font-size:18px;
 }
@@ -402,15 +394,15 @@ audio {
 }
 
 #main-menu li {
-	position:relative;
-	float:left;
-	padding:0;
-	margin:0;
-	line-height:40px;
+  position:relative;
+  float:left;
+  padding:0;
+  margin:0;
+  line-height:40px;
 }
 
 #main-menu li li{
-	line-height:13px;
+  line-height:13px;
 }
 
 #main-menu ul li:first-child {
@@ -510,10 +502,6 @@ audio {
   display:block;
 }
 
-li:hover .l2 {
-    display:block;
-}
-
 #main-menu .nav-toggle {
   display:none;
 }
@@ -594,9 +582,9 @@ li:hover .l2 {
 }
 
 .flex-control-nav li {
-	display:inline-block;
-	margin:0 0 0 15px;
-	float:left; /** Added by ibou65 to fix vertical display of slides link on IE7, line 603 **/
+  display:inline-block;
+  margin:0 0 0 15px;
+  float:left; /** Added by ibou65 to fix vertical display of slides link on IE7, line 603 **/
 }
 
 .flex-control-nav li:first-child {
@@ -633,16 +621,16 @@ li:hover .l2 {
 }
 
 #slider .slide-image {
-	max-width:49%;
-	padding:0.47%;
-	background:#E9E9E9;
+  max-width:49%;
+  padding:0.47%;
+  background:#E9E9E9;
 }
 
 #slider .entry-header,
 #slider .entry-summary {
-  	width:550px;
-	max-width:95%;
-	margin-left:5%;
+    width:550px;
+  max-width:95%;
+  margin-left:5%;
 }
 
 #slider .entry-title{
@@ -1383,12 +1371,12 @@ ol.search-results { padding-left: 0; }
   }
 
  #header h1#site-title {
-	display: block;
-	float:none;
-	clear: both;
-	padding: 0px;
-	margin: 0px;
-	line-height: 1em;
+  display: block;
+  float:none;
+  clear: both;
+  padding: 0px;
+  margin: 0px;
+  line-height: 1em;
    }
 
    #header #logo {
@@ -1587,7 +1575,7 @@ body.two-sidebars #sidebar-first {
 
 /** SPECIAL CLASSES FOR OVERRIDING CORE THEMES **/
 #user-login-form {
-	color:#000;
+  color:#000;
 }
 
 .marker, .form-required {
